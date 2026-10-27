@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using TasksApi.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

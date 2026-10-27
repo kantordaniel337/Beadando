@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using TasksApi.Data;
+using TasksApi.Models;
 
 public class CalendarService
 {

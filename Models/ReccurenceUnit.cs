@@ -1,3 +1,4 @@
+namespace TasksApi.Models;
 public enum RecurrenceUnit
 {
     Minute,

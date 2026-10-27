@@ -1,3 +1,4 @@
+namespace TasksApi.Models;
 public class CalendarOccurrenceDto
 {
     public int CalendarTaskId { get; set; }

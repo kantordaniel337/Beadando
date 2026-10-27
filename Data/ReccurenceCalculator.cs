@@ -1,3 +1,6 @@
+namespace TasksApi.Data;
+using TasksApi.Models;
+
 public static class RecurrenceCalculator
 {
     public static DateTime GetOccurrenceStart(

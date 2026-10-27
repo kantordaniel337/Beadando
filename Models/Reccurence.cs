@@ -1,3 +1,4 @@
+namespace TasksApi.Models;
 public class Recurrence
 {
     public int Id { get; set; }

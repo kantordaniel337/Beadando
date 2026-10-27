@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using TasksApi.Models;
+
+namespace TasksApi.Data;
 
 public class CalendarDbContext : DbContext
 {

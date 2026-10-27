@@ -1,3 +1,4 @@
+namespace TasksApi.Models;
 public class Occurrence
 {
     public int Id { get; set; }

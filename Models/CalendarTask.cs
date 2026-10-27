@@ -1,3 +1,4 @@
+namespace TasksApi.Models;
 public class CalendarTask
 {
     public int Id { get; set; }
