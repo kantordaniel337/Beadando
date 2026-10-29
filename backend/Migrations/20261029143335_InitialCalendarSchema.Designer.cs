@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TasksApi.Models;
 using TasksApi.Data;
 
 #nullable disable
@@ -13,7 +12,7 @@ using TasksApi.Data;
 namespace TasksApi.Migrations
 {
     [DbContext(typeof(CalendarDbContext))]
-    [Migration("20261027145026_InitialCalendarSchema")]
+    [Migration("20261029143335_InitialCalendarSchema")]
     partial class InitialCalendarSchema
     {
         /// <inheritdoc />
@@ -26,7 +25,7 @@ namespace TasksApi.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("CalendarTask", b =>
+            modelBuilder.Entity("TasksApi.Models.CalendarTask", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +54,7 @@ namespace TasksApi.Migrations
                     b.ToTable("CalendarTasks");
                 });
 
-            modelBuilder.Entity("Occurrence", b =>
+            modelBuilder.Entity("TasksApi.Models.Occurrence", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,7 +85,7 @@ namespace TasksApi.Migrations
                     b.ToTable("Occurrences");
                 });
 
-            modelBuilder.Entity("Recurrence", b =>
+            modelBuilder.Entity("TasksApi.Models.Recurrence", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,9 +104,9 @@ namespace TasksApi.Migrations
                     b.ToTable("Recurrences");
                 });
 
-            modelBuilder.Entity("CalendarTask", b =>
+            modelBuilder.Entity("TasksApi.Models.CalendarTask", b =>
                 {
-                    b.HasOne("Recurrence", "Recurrence")
+                    b.HasOne("TasksApi.Models.Recurrence", "Recurrence")
                         .WithMany("Tasks")
                         .HasForeignKey("RecurrenceId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -115,9 +114,9 @@ namespace TasksApi.Migrations
                     b.Navigation("Recurrence");
                 });
 
-            modelBuilder.Entity("Occurrence", b =>
+            modelBuilder.Entity("TasksApi.Models.Occurrence", b =>
                 {
-                    b.HasOne("CalendarTask", "CalendarTask")
+                    b.HasOne("TasksApi.Models.CalendarTask", "CalendarTask")
                         .WithMany("Occurrences")
                         .HasForeignKey("CalendarTaskId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -126,12 +125,12 @@ namespace TasksApi.Migrations
                     b.Navigation("CalendarTask");
                 });
 
-            modelBuilder.Entity("CalendarTask", b =>
+            modelBuilder.Entity("TasksApi.Models.CalendarTask", b =>
                 {
                     b.Navigation("Occurrences");
                 });
 
-            modelBuilder.Entity("Recurrence", b =>
+            modelBuilder.Entity("TasksApi.Models.Recurrence", b =>
                 {
                     b.Navigation("Tasks");
                 });

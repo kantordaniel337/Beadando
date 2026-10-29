@@ -1,0 +1,102 @@
+﻿
+<Window x:Class="TasksWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Tasks Calendar"
+        Height="600" Width="1000"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="16" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Column="0">
+            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                <TextBlock Text="Naptárfeladatok"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Margin="0,0,0,10" />
+
+                <Button Content="Lista frissítése"
+                        Height="34"
+                        Width="140"
+                        HorizontalAlignment="Left"
+                        Click="Refresh_Click" />
+            </StackPanel>
+
+            <DataGrid x:Name="TasksGrid"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      SelectionChanged="TasksGrid_SelectionChanged"
+                      CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID"
+                                        Binding="{Binding Id}"
+                                        Width="50" />
+                    <DataGridTextColumn Header="Feladat"
+                                        Binding="{Binding Name}"
+                                        Width="*" />
+                    <DataGridTextColumn Header="Kezdés"
+                                        Binding="{Binding StartTime,
+                                            StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                        Width="145" />
+                    <DataGridTextColumn Header="Befejezés"
+                                        Binding="{Binding EndTime,
+                                            StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                        Width="145" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+        <StackPanel Grid.Column="2">
+            <TextBlock Text="Feladat adatai"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Margin="0,0,0,16" />
+
+            <TextBlock Text="Feladat neve" />
+            <TextBox x:Name="NameBox" Margin="0,4,0,12"
+                     Padding="6" />
+
+            <TextBlock Text="Kezdés (pl. 2026-10-29 09:00)" />
+            <TextBox x:Name="StartBox" Margin="0,4,0,12"
+                     Padding="6" />
+
+            <TextBlock Text="Befejezés (pl. 2026-10-29 10:00)" />
+            <TextBox x:Name="EndBox" Margin="0,4,0,12"
+                     Padding="6" />
+
+            <TextBlock Text="Ismétlődés ID (opcionális)" />
+            <TextBox x:Name="RecurrenceBox" Margin="0,4,0,18"
+                     Padding="6" />
+
+            <Button Content="Új feladat"
+                    Height="36"
+                    Margin="0,0,0,8"
+                    Click="Add_Click" />
+
+            <Button Content="Kijelölt módosítása"
+                    Height="36"
+                    Margin="0,0,0,8"
+                    Click="Update_Click" />
+
+            <Button Content="Kijelölt törlése"
+                    Height="36"
+                    Margin="0,0,0,8"
+                    Click="Delete_Click" />
+
+            <Button Content="Űrlap ürítése"
+                    Height="36"
+                    Click="Clear_Click" />
+
+            <TextBlock x:Name="StatusText"
+                       Text="API-kapcsolatra vár."
+                       TextWrapping="Wrap"
+                       Margin="0,18,0,0" />
+        </StackPanel>
+    </Grid>
+</Window>

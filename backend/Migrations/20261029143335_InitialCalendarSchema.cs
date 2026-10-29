@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using TasksApi.Models;
-using TasksApi.Data;
 
 #nullable disable
 
