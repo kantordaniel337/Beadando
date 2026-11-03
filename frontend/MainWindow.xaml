@@ -2,6 +2,7 @@
 <Window x:Class="TasksWpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="Tasks Calendar"
         Height="600" Width="1000"
         WindowStartupLocation="CenterScreen">
@@ -14,17 +15,46 @@
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Column="0">
+
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
                 <TextBlock Text="Naptárfeladatok"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Margin="0,0,0,10" />
+                        FontSize="24"
+                        FontWeight="Bold"
+                        Margin="0,0,0,10" />
 
-                <Button Content="Lista frissítése"
-                        Height="34"
-                        Width="140"
-                        HorizontalAlignment="Left"
-                        Click="Refresh_Click" />
+                <WrapPanel Margin="0,0,0,10">
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Kezdő dátum" />
+                        <DatePicker x:Name="FromDatePicker"
+                                    SelectedDate="{x:Static sys:DateTime.Today}"
+                                    Width="150" />
+                        <TextBox x:Name="FromTimeBox"
+                                Text="00:00"
+                                Margin="0,4,0,0"
+                                Padding="5" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Záró dátum" />
+                        <DatePicker x:Name="ToDatePicker"
+                                    Width="150" />
+                        <TextBox x:Name="ToTimeBox"
+                                Text="23:59"
+                                Margin="0,4,0,0"
+                                Padding="5" />
+                    </StackPanel>
+
+                    <Button Content="Szűrés"
+                            Width="100"
+                            Height="32"
+                            Margin="0,0,0,0"
+                            Click="Filter_Click" />
+                    <Button Content="Reset"
+                            Width="100"
+                            Height="32"
+                            Margin="8,0,0,0"
+                            Click="Reset_Click" />
+                </WrapPanel>
             </StackPanel>
 
             <DataGrid x:Name="TasksGrid"

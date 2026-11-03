@@ -18,6 +18,8 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         TasksGrid.ItemsSource = _tasks;
+        FromDatePicker.SelectedDate = DateTime.Today;
+        ToDatePicker.SelectedDate = DateTime.Today.AddDays(7);
         Loaded += async (_, _) => await LoadTasksAsync();
     }
 
@@ -25,14 +27,40 @@ public partial class MainWindow : Window
     {
         try
         {
-            var tasks = await _api.GetTasksAsync();
+            if (FromDatePicker.SelectedDate == null ||
+                ToDatePicker.SelectedDate == null)
+            {
+                throw new InvalidOperationException(
+                    "Mindkét dátumot ki kell választani.");
+            }
+
+            if (!TimeSpan.TryParse(FromTimeBox.Text, out var fromTime) ||
+                !TimeSpan.TryParse(ToTimeBox.Text, out var toTime))
+            {
+                throw new InvalidOperationException(
+                    "Az időpont formátuma HH:mm legyen.");
+            }
+
+            DateTime from = FromDatePicker.SelectedDate.Value
+                .Date.Add(fromTime);
+
+            DateTime to = ToDatePicker.SelectedDate.Value
+                .Date.Add(toTime);
+
+            if (to <= from)
+            {
+                throw new InvalidOperationException(
+                    "A záró időpontnak a kezdő időpont után kell lennie.");
+            }
+
+            var tasks = await _api.GetTasksAsync(from, to);
 
             _tasks.Clear();
 
             foreach (var task in tasks)
                 _tasks.Add(task);
 
-            StatusText.Text = $"{_tasks.Count} feladat betöltve.";
+            StatusText.Text = $"{_tasks.Count} feladat található.";
         }
         catch (Exception ex)
         {
@@ -199,10 +227,22 @@ public partial class MainWindow : Window
     {
         StatusText.Text = $"Hiba: {ex.Message}";
 
-        MessageBox.Show(
-            ex.Message,
-            "API-hiba",
-            MessageBoxButton.OK,
-            MessageBoxImage.Error);
+        MessageBox.Show(ex.Message,"API-hiba",MessageBoxButton.OK,MessageBoxImage.Error);
+    }
+
+    private async void Filter_Click(object sender,RoutedEventArgs e)
+    {
+        await LoadTasksAsync();
+    }
+
+    private async void Reset_Click(object sender,RoutedEventArgs e)
+    {
+        FromDatePicker.SelectedDate = DateTime.Today;
+        ToDatePicker.SelectedDate = DateTime.Today.AddDays(7);
+
+        FromTimeBox.Text = "00:00";
+        ToTimeBox.Text = "23:59";
+
+        await LoadTasksAsync();
     }
 }

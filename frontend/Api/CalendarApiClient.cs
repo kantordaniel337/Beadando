@@ -51,4 +51,22 @@ public class CalendarApiClient
 
         response.EnsureSuccessStatusCode();
     }
+
+    public async Task<List<CalendarTaskDto>> GetTasksAsync(
+    DateTime from,
+    DateTime to)
+    {
+    var fromValue = Uri.EscapeDataString(
+        from.ToString("yyyy-MM-ddTHH:mm:ss"));
+
+    var toValue = Uri.EscapeDataString(
+        to.ToString("yyyy-MM-ddTHH:mm:ss"));
+
+    var url = $"api/calendar?from={fromValue}&to={toValue}";
+
+    var tasks = await _httpClient
+        .GetFromJsonAsync<List<CalendarTaskDto>>(url);
+
+    return tasks ?? [];
+    }
 }

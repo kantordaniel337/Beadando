@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TasksWpf")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+561fd12487331a91bee93ef06b85e339b75f5277")]
 [assembly: System.Reflection.AssemblyProductAttribute("TasksWpf")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TasksWpf")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
