@@ -102,17 +102,16 @@ public partial class MainWindow : Window
 
         int? recurrenceId = null;
 
-        if (!string.IsNullOrWhiteSpace(RecurrenceBox.Text))
-        {
-            if (!int.TryParse(RecurrenceBox.Text, out var parsedId)
-                || parsedId <= 0)
-            {
-                throw new InvalidOperationException(
-                    "Az ismétlődés ID-ja pozitív egész szám legyen.");
-            }
+        // if (!string.IsNullOrWhiteSpace(RecurrenceBox.Text))
+        // {
+        //     if (!int.TryParse(RecurrenceBox.Text, out var parsedId)|| parsedId <= 0)
+        //     {
+        //         throw new InvalidOperationException(
+        //             "Az ismétlődés ID-ja pozitív egész szám legyen.");
+        //     }
 
-            recurrenceId = parsedId;
-        }
+        //     recurrenceId = parsedId;
+        // }
 
         return new CalendarTaskDto
         {
@@ -128,10 +127,16 @@ public partial class MainWindow : Window
     {
         try
         {
+            int? recurrenceId = await GetSelectedRecurrenceIdAsync();
+
             var task = ReadForm();
+            task.RecurrenceId = recurrenceId;
+
             await _api.CreateTaskAsync(task);
+
             ClearForm();
             await LoadTasksAsync();
+
             StatusText.Text = "Feladat létrehozva.";
         }
         catch (Exception ex)
@@ -150,7 +155,9 @@ public partial class MainWindow : Window
 
         try
         {
+            int? recurrenceId = await GetSelectedRecurrenceIdAsync();
             var task = ReadForm(selected.Id);
+            task.RecurrenceId = recurrenceId;
             await _api.UpdateTaskAsync(task);
             await LoadTasksAsync();
             ClearForm();
@@ -206,7 +213,7 @@ public partial class MainWindow : Window
         NameBox.Text = task.Name;
         StartBox.Text = task.StartTime.ToString("yyyy-MM-dd HH:mm");
         EndBox.Text = task.EndTime.ToString("yyyy-MM-dd HH:mm");
-        RecurrenceBox.Text = task.RecurrenceId?.ToString() ?? "";
+        // RecurrenceBox.Text = task.RecurrenceId?.ToString() ?? "";
     }
 
     private void Clear_Click(object sender, RoutedEventArgs e)
@@ -220,7 +227,10 @@ public partial class MainWindow : Window
         NameBox.Clear();
         StartBox.Clear();
         EndBox.Clear();
-        RecurrenceBox.Clear();
+        RecurrenceUnitBox.SelectedIndex = 0;
+        RecurrenceValueBox.Text = "2";
+        CustomUnitBox.SelectedIndex = 2;
+        CustomRecurrencePanel.Visibility = Visibility.Collapsed;
     }
 
     private void ShowError(Exception ex)
@@ -244,5 +254,68 @@ public partial class MainWindow : Window
         ToTimeBox.Text = "23:59";
 
         await LoadTasksAsync();
+    }
+
+
+    private void RecurrenceUnitBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
+    {
+        if (CustomRecurrencePanel == null ||
+            RecurrenceUnitBox.SelectedItem is not ComboBoxItem item)
+            return;
+
+        CustomRecurrencePanel.Visibility =
+            item.Tag?.ToString() == "Custom"
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+    }
+
+
+    private async Task<int?> GetSelectedRecurrenceIdAsync()
+    {
+        if (RecurrenceUnitBox.SelectedItem is not ComboBoxItem selected)
+            return null;
+
+        string unitName = selected.Tag?.ToString() ?? "None";
+
+        if (unitName == "None")
+            return null;
+
+        int value;
+        
+        if (unitName == "Custom")
+        {
+            if (!int.TryParse(RecurrenceValueBox.Text, out value)
+                || value <= 0)
+            {
+                throw new InvalidOperationException(
+                    "Az ismétlődés értéke pozitív egész szám legyen.");
+            }
+
+            if (CustomUnitBox.SelectedItem is not ComboBoxItem customUnit)
+                throw new InvalidOperationException(
+                    "Válassz időegységet!");
+
+            unitName = customUnit.Tag?.ToString() ?? "Day";
+        }
+        else
+        {
+            value = 1;
+        }
+
+        int unit = unitName switch
+        {
+            "Minute" => 0,
+            "Hour" => 1,
+            "Day" => 2,
+            "Week" => 3,
+            "Month" => 4,
+            "Year" => 5,
+            _ => throw new InvalidOperationException(
+                "Ismeretlen ismétlődési egység.")
+        };
+
+        var recurrence = await _api.CreateRecurrenceAsync(value, unit);
+
+        return recurrence.Id;
     }
 }

@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="Tasks Calendar"
-        Height="600" Width="1000"
+        Height="700" Width="1000"
         WindowStartupLocation="CenterScreen">
 
     <Grid Margin="16">
@@ -99,10 +99,50 @@
             <TextBlock Text="Befejezés (pl. 2026-10-29 10:00)" />
             <TextBox x:Name="EndBox" Margin="0,4,0,12"
                      Padding="6" />
+            <TextBlock Text="Ismétlődés"
+           FontWeight="SemiBold"
+           Margin="0,8,0,6" />
 
-            <TextBlock Text="Ismétlődés ID (opcionális)" />
-            <TextBox x:Name="RecurrenceBox" Margin="0,4,0,18"
-                     Padding="6" />
+        <ComboBox x:Name="RecurrenceUnitBox"
+                SelectedIndex="0"
+                Padding="6"
+                Margin="0,0,0,10"
+                SelectionChanged="RecurrenceUnitBox_SelectionChanged">
+                <ComboBoxItem Content="Nincs ismétlődés" Tag="None"/>
+                <ComboBoxItem Content="Naponta" Tag="Day"/>
+                <ComboBoxItem Content="Hetente" Tag="Week"/>
+                <ComboBoxItem Content="Havonta" Tag="Month"/>
+                <ComboBoxItem Content="Évente" Tag="Year"/>
+                <ComboBoxItem Content="Óránként" Tag="Hour"/>
+                <ComboBoxItem Content="Percenként" Tag="Minute"/>
+                <ComboBoxItem Content="Egyéni..." Tag="Custom"/>
+        </ComboBox>
+
+        <StackPanel x:Name="CustomRecurrencePanel"
+                    Visibility="Collapsed"
+                    Margin="0,0,0,12">
+
+            <TextBlock Text="Ismétlődés minden ennyi időközönként:" />
+
+            <TextBox x:Name="RecurrenceValueBox"
+                    Text="2"
+                    Padding="6"
+                    Margin="0,5,0,8"/>
+
+            <TextBlock Text="Időegység:" />
+
+            <ComboBox x:Name="CustomUnitBox"
+                    SelectedIndex="2"
+                    Padding="6"
+                    Margin="0,5,0,0">
+                <ComboBoxItem Content="Perc" Tag="Minute"/>
+                <ComboBoxItem Content="Óra" Tag="Hour"/>
+                <ComboBoxItem Content="Nap" Tag="Day"/>
+                <ComboBoxItem Content="Hét" Tag="Week"/>
+                <ComboBoxItem Content="Hónap" Tag="Month"/>
+                <ComboBoxItem Content="Év" Tag="Year"/>
+            </ComboBox>
+        </StackPanel>
 
             <Button Content="Új feladat"
                     Height="36"

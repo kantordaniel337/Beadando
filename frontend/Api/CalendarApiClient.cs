@@ -52,21 +52,36 @@ public class CalendarApiClient
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task<List<CalendarTaskDto>> GetTasksAsync(
-    DateTime from,
-    DateTime to)
+    public async Task<List<CalendarTaskDto>> GetTasksAsync(DateTime from,DateTime to)
     {
-    var fromValue = Uri.EscapeDataString(
-        from.ToString("yyyy-MM-ddTHH:mm:ss"));
+        var fromValue = Uri.EscapeDataString(
+            from.ToString("yyyy-MM-ddTHH:mm:ss"));
 
-    var toValue = Uri.EscapeDataString(
-        to.ToString("yyyy-MM-ddTHH:mm:ss"));
+        var toValue = Uri.EscapeDataString(
+            to.ToString("yyyy-MM-ddTHH:mm:ss"));
 
-    var url = $"api/calendar?from={fromValue}&to={toValue}";
+        var url = $"api/calendar?from={fromValue}&to={toValue}";
 
-    var tasks = await _httpClient
-        .GetFromJsonAsync<List<CalendarTaskDto>>(url);
+        var tasks = await _httpClient
+            .GetFromJsonAsync<List<CalendarTaskDto>>(url);
 
-    return tasks ?? [];
+        return tasks ?? [];
+    }
+
+    public async Task<RecurrenceDto> CreateRecurrenceAsync(int value,int unit)
+    {
+        var recurrence = new RecurrenceDto
+        {
+            Value = value,
+            Unit = unit
+        };
+
+        var response = await _httpClient.PostAsJsonAsync("api/Recurrences", recurrence);
+
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content
+            .ReadFromJsonAsync<RecurrenceDto>()
+            ?? throw new Exception("Nem érkezett vissza az ismétlődés.");
     }
 }
